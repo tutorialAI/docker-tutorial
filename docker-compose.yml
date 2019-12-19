@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  web:
+    image: php:7.3-apache
+    restart: always
+    ports:
+      - '80:80'
+    volumes:
+      - ./src:/var/www/html
+    links: 
+      - database
+  database:
+    image: mysql:5.6
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'admin'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: ''
+    ports: 
+      - '3306:3306'
+    volumes:
+     # - ./src/data:/docker-entrypoint-initdb.d
+     - ./src/data:/var/lib/mysql
+     # - persistent:/var/lib/mysql
+
