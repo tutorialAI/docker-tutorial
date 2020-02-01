@@ -34,3 +34,13 @@ System
 : docker stats
 : docker system df
 : docker system 
+___________________________
+
+composer key: 63883c13a1fdeafc57f1d7646b4475155979ea5e
+solution error with db: define("db_host","db");
+solution error smarty permissions: chmod -rwxr-xr-x templates_c
+execute reload nginx confing in container: $ docker container exec <container> nginx -s reload
+____________
+
+Linux 
+ls -la
