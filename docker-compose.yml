@@ -2,18 +2,18 @@ version: "3.1"
 services:
 
   nginx:
-    image: tutum/nginx
+    image: nginx:1.14
+    container_name: nginx
     ports:
-      - "80:80"
-    links:
-      - php-fpm
+        - "80:80"
+        - "443:443"
     volumes:
-      - ./nginx/default:/etc/nginx/sites-available/default
-      - ./nginx/default:/etc/nginx/sites-enabled/default
-
-      - ./logs/nginx.log:/var/log/access
-      - ./logs/nginx.log:/var/log/error
-
+        - ./Nginx/core:/etc/nginx/conf.d
+        - ./public:/var/www/
+        - ./Nginx/Logs:/var/log/nginx/
+      #  - ./Nginx/html:/usr/share/nginx/html/
+    depends_on:
+      - php-fpm
   php-fpm:
     build:
       context: .
@@ -21,13 +21,14 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./public:/public
+      - ./public:/var/www
     depends_on:
       - mysql
 
   mysql:
     image: mysql:5.6
-    restart: always
+    # restart: always
+    command: --innodb_use_native_aio=0
     environment:
       MYSQL_ROOT_PASSWORD: 'admin'
       MYSQL_USER: 'root'
@@ -36,5 +37,16 @@ services:
       - "3306:3306"
     volumes:
       - ./data:/var/lib/mysql
-    # depends_on:
-    #   - mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
