@@ -2,18 +2,30 @@ version: '3'
 
 services:
   web:
-    image: php:7.3-apache
+    image: nginx:1.18
     restart: always
     ports:
       - '80:80'
     volumes:
-      - ./src:/var/www/html
+      - ./src:/src
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/var/log/nginx
     links: 
-      - database
-  database:
+      - php-fpm
+  php-fpm:
+    build:
+      context: .
+      dockerfile: ./php-fpm/Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./src:/src
+  db:
     image: mysql:5.6
-    restart: always
+    # restart: always
+    command: --innodb_use_native_aio=0
     environment:
+      DB_HOST: 'php-fpm'
       MYSQL_ROOT_PASSWORD: 'admin'
       MYSQL_USER: 'root'
       MYSQL_PASSWORD: ''
@@ -21,6 +33,18 @@ services:
       - '3306:3306'
     volumes:
      # - ./src/data:/docker-entrypoint-initdb.d
-     - ./src/data:/var/lib/mysql
+     - ./data:/var/lib/mysql
      # - persistent:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - db
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
 
