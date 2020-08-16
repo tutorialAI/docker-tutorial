@@ -1,3 +1,4 @@
 /.git
 /data
-/src/*
+/src
+/nginx/logs/
