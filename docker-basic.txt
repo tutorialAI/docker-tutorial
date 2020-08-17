@@ -1,9 +1,3 @@
-0856416354
-Bb0856416354
-Лукин Руслан Серегевич
-
-
-
 Basic
 : docker version
 : docker -v
@@ -15,7 +9,7 @@ Images
 : docker images
 : docker pull
 : docker rmi
-: docker images -f "dangling=false"        // "dangling" - запущенные образы 
+: docker images -f "dangling=false"        // "dangling" - запущенные образы
 : docker images -f "dangling=false" -q
 
 : docker inspect
@@ -39,4 +33,6 @@ Docker-compose
 System
 : docker stats
 : docker system df
-: docker system prune
+: docker system
+
+: docker exec <container> nginx -s reload
