@@ -1,0 +1,5 @@
+/.idea
+/.git
+/data
+/nginx/logs
+src/*
